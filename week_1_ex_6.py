@@ -3,7 +3,17 @@ import random
 import math
 import matplotlib.pyplot as plt
 
+cities = [x for x in range(1,9)]
+# random city positions
+city_positions = [[random.randint(0,100), random.randint(0,100)] for x in cities]
+
+# number of iterations to run the algorithms
+runs = 1000
+
+pop_size = 5
+
 def fitness(candidate):
+    # claculate the distance of all neighbouring cities and add them
     dist = 0
     for i in range(len(candidate)-1):
         c = candidate[i]
@@ -13,18 +23,18 @@ def fitness(candidate):
         dist += math.hypot(pos_c2[0] - pos_c[0], pos_c2[1] - pos_c[1])
     return dist
 
-def select_parents(population):
+def select_parents(population, nr_of_parents = 2):
     """select parents using tournament selection"""
-    candidates = random.sample(population, k=4)
-    return evaluate(candidates)
+    candidates = random.sample(population, k=min((nr_of_parents*2), len(population)))
+    return evaluate(candidates, nr_of_parents)
 
-def evaluate(candidates):
+def evaluate(candidates, nr_of_parents = 2):
     fit_eval = []
     for i in range(len(candidates)):
         fit_eval.append((fitness(candidates[i]),i))
     fit_eval.sort(key=lambda t:t[0])
     #print(fit_eval)
-    return candidates[fit_eval[0][1]], candidates[fit_eval[1][1]], fit_eval[3][1], fit_eval[0][1]
+    return [candidates[fit_eval[x][1]] for x in range(min(nr_of_parents,len(candidates)))], fit_eval[3][1], fit_eval[0][1]
 
 def local_search(population):
     new_population = []
@@ -84,45 +94,51 @@ def plot_result(candidate, caption=''):
     plt.show()
 
 def ea(candidates):
-    for i in range(0, 100):
-        parent1, parent2, index_worst, best_index = select_parents(candidates)
-        parents = [parent1, parent2]
-        # print(parents)
+    for i in range(0, runs):
+        parents, index_worst, best_index = select_parents(candidates)
+        #print(parents)
         child = get_child(parents[0], parents[1])
         child = mutation(child)
-        parent1, parent2, index_worst, best_index = evaluate(candidates)
+        parents, index_worst, best_index = evaluate(candidates)
         candidates[index_worst] = child
         #print(child)
         #print(candidates)
         #print()
-    parent1, parent2, index_worst, best_index = evaluate(candidates)
+    parents, index_worst, best_index = evaluate(candidates)
     plot_result(candidates[best_index], "EA best solution")
     print("EA: " + str(fitness(candidates[best_index])))
 
-cities = [1,2,3,4,5,6,7,8]
-city_positions = [[random.randint(0,100), random.randint(0,100)] for x in cities]
-print(city_positions)
-
-# starting population:
-candidates = [np.random.permutation(cities) for x in range(0,5)]
-print(candidates)
-parent1, parent2, index_worst, best_index = evaluate(candidates)
-plot_result(candidates[best_index], "Initial best")
-print("initial best: "+ str(fitness(candidates[best_index])))
-#ea(candidates)
-
-for i in range(0,1000):
+def memetic(candidates):
     candidates = local_search(candidates)
-    parent1, parent2, index_worst, best_index = select_parents(candidates)
-    parents = [parent1, parent2]
-    #print(parents)
-    child = get_child(parents[0], parents[1])
-    child = mutation(child)
-    child = local_search([child])
-    parent1, parent2, index_worst, best_index = evaluate(candidates)
-    candidates[index_worst] = child[0]
-    #print(candidates)
-    #print()
-parent1, parent2, index_worst, best_index = evaluate(candidates)
-plot_result(candidates[best_index], "memetic best")
-print("memetic best: "+ str(fitness(candidates[best_index])))
+    for i in range(0, runs):
+        parents, index_worst, best_index = select_parents(candidates, 5)
+        for i,p1 in enumerate(parents):
+            for j, p2 in enumerate(parents):
+                if i != j:
+                    child = get_child(p1, p2)
+                    child = mutation(child)
+                    candidates.append(child)
+        candidates = local_search(candidates)
+        parents, index_worst, best_index = evaluate(candidates,pop_size)
+        candidates = parents
+        # print(candidates)
+        # print()
+    parents, index_worst, best_index = evaluate(candidates)
+    plot_result(candidates[best_index], "memetic best")
+    print("memetic best: " + str(fitness(candidates[best_index])))
+
+def main():
+    print(city_positions)
+
+    # starting population:
+    candidates = [np.random.permutation(cities) for x in range(0,pop_size)]
+    print(candidates)
+    parents, index_worst, best_index = evaluate(candidates)
+    plot_result(candidates[best_index], "Initial best")
+    print("initial best: "+ str(fitness(candidates[best_index])))
+    ea(candidates)
+    memetic(candidates)
+
+if __name__ == "__main__":
+    main()
+
