@@ -2,15 +2,25 @@ import numpy as np
 import random
 import math
 import matplotlib.pyplot as plt
-
-cities = [x for x in range(1,9)]
-# random city positions
-city_positions = [[random.randint(0,100), random.randint(0,100)] for x in cities]
+def read_file(name):
+    cities = []
+    city_positions = []
+    f= open(name,'r').readlines()
+    for line in f:
+        elems = line.split(' ')
+        cities.append(int(elems[0]))
+        city_positions.append((int(elems[1]),int(elems[2])))
+    return cities, city_positions
 
 # number of iterations to run the algorithms
 runs = 1000
-
 pop_size = 5
+
+#cities = [x for x in range(1,9)]
+# random city positions
+#city_positions = [[random.randint(0,100), random.randint(0,100)] for x in cities]
+cities, city_positions = read_file('US_capitals')
+
 
 def fitness(candidate):
     # claculate the distance of all neighbouring cities and add them
@@ -48,9 +58,10 @@ def local_search(population):
                     if i != j:
                         new_candidate = candidate
                         new_candidate[i:j] = candidate[j-1:i-1:-1]
-                        if fitness(new_candidate) < best_distance:
+                        tmp = fitness(new_candidate)
+                        if (tmp - best_distance) < -1 :
                             candidate = new_candidate
-                            best_distance = fitness(new_candidate)
+                            best_distance = tmp
                             improved = True
         new_population.append(candidate)
     return new_population
@@ -111,6 +122,7 @@ def ea(candidates):
 def memetic(candidates):
     candidates = local_search(candidates)
     for i in range(0, runs):
+        print(i)
         parents, index_worst, best_index = select_parents(candidates, 5)
         for i,p1 in enumerate(parents):
             for j, p2 in enumerate(parents):
