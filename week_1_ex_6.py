@@ -13,12 +13,12 @@ def read_file(name):
     return cities, city_positions
 
 # number of iterations to run the algorithms
-runs = 1000
+runs = 500
 pop_size = 5
 
-#cities = [x for x in range(1,9)]
+# cities = [x for x in range(1,9)]
 # random city positions
-#city_positions = [[random.randint(0,100), random.randint(0,100)] for x in cities]
+# city_positions = [[random.randint(0,100), random.randint(0,100)] for x in cities]
 cities, city_positions = read_file('US_capitals')
 
 
@@ -44,7 +44,7 @@ def evaluate(candidates, nr_of_parents = 2):
         fit_eval.append((fitness(candidates[i]),i))
     fit_eval.sort(key=lambda t:t[0])
     #print(fit_eval)
-    return [candidates[fit_eval[x][1]] for x in range(min(nr_of_parents,len(candidates)))], fit_eval[3][1], fit_eval[0][1]
+    return [candidates[fit_eval[x][1]] for x in range(min(nr_of_parents,len(candidates)))], fit_eval[len(fit_eval)-1][1], fit_eval[0][1]
 
 def local_search(population):
     new_population = []
@@ -56,14 +56,18 @@ def local_search(population):
             for i in range(1,len(candidate)-2):
                 for j in range(i+1, len(candidate)):
                     if i != j:
-                        new_candidate = candidate
+                        new_candidate = [x for x in candidate]
                         new_candidate[i:j] = candidate[j-1:i-1:-1]
                         tmp = fitness(new_candidate)
-                        if (tmp - best_distance) < -1 :
+                        #print("best fit: " + str(best_distance) + " new fit: " + str(tmp))
+                        if tmp < best_distance:
+                            #print("changed candidate")
                             candidate = new_candidate
                             best_distance = tmp
                             improved = True
         new_population.append(candidate)
+    #print("new pop: ")
+    #evaluate(new_population,pop_size)
     return new_population
 
 def get_child(parent1, parent2):
@@ -118,33 +122,39 @@ def ea(candidates):
     parents, index_worst, best_index = evaluate(candidates)
     plot_result(candidates[best_index], "EA best solution")
     print("EA: " + str(fitness(candidates[best_index])))
+    print("Route: " + str(candidates[best_index]))
 
 def memetic(candidates):
     candidates = local_search(candidates)
     for i in range(0, runs):
         print(i)
-        parents, index_worst, best_index = select_parents(candidates, 5)
+        parents, index_worst, best_index = evaluate(candidates, 2)
+        #print("best: " + str(fitness(candidates[best_index])))
         for i,p1 in enumerate(parents):
             for j, p2 in enumerate(parents):
                 if i != j:
                     child = get_child(p1, p2)
                     child = mutation(child)
                     candidates.append(child)
+        #print("befor local search")
+        parents, index_worst, best_index = evaluate(candidates, pop_size)
         candidates = local_search(candidates)
+        #print("after local search")
         parents, index_worst, best_index = evaluate(candidates,pop_size)
+        #print("best: " + str(fitness(candidates[best_index])))
         candidates = parents
         # print(candidates)
         # print()
     parents, index_worst, best_index = evaluate(candidates)
     plot_result(candidates[best_index], "memetic best")
     print("memetic best: " + str(fitness(candidates[best_index])))
+    print("Route: " + str(candidates[best_index]))
 
 def main():
-    print(city_positions)
-
+    #print(city_positions)
     # starting population:
     candidates = [np.random.permutation(cities) for x in range(0,pop_size)]
-    print(candidates)
+    #print(candidates)
     parents, index_worst, best_index = evaluate(candidates)
     plot_result(candidates[best_index], "Initial best")
     print("initial best: "+ str(fitness(candidates[best_index])))
