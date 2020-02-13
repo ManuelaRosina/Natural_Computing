@@ -155,7 +155,7 @@ def main():
     # starting population:
     candidates = [np.random.permutation(cities) for x in range(0,pop_size)]
     #print(candidates)
-    parents, index_worst, best_index = evaluate(candidates)
+    parents, index_worst, best_index = evaluate(candidates, pop_size)
     plot_result(candidates[best_index], "Initial best")
     print("initial best: "+ str(fitness(candidates[best_index])))
     ea(candidates)
