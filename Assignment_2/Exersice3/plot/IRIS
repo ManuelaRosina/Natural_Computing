@@ -1,0 +1,12 @@
+
+KMeans Algorithm
+Silhouette: 0.5528190123564091
+SSE: 78.85144142614601
+Quantization: 5.02982569656552
+
+PSO Algorithm
+Initial global best score 6.03159054603609
+Finish with gbest score 5.668649354338056945
+Silhouette: 0.5044846476451118
+SSE: 156.65962102610752
+Quantization: 5.668649354338057
