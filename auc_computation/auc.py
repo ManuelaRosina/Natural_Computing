@@ -4,7 +4,7 @@ from sklearn.metrics import roc_curve
 import matplotlib.pyplot as plt
 # load the two text files with the scores
 english_pred = np.loadtxt('english.test.out')
-tagalog_pred = np.loadtxt('tagalog.test.out')
+tagalog_pred = np.loadtxt('lang/xhosa.out')
 
 # assign the labels
 y = [1 for x in english_pred]
