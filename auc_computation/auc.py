@@ -2,8 +2,8 @@ import numpy as np
 from sklearn.metrics import roc_auc_score
 
 # load the two text files with the scores
-english_pred = np.loadtxt('english.test.out')
-tagalog_pred = np.loadtxt('lang/xhosa.out')
+english_pred = np.loadtxt('english.test.out10')
+tagalog_pred = np.loadtxt('tagalog.test.out10')
 
 # assign the labels
 y = [1 for x in english_pred]
