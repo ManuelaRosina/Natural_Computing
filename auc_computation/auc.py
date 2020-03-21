@@ -55,6 +55,7 @@ print(compute_score(y, y2, english_pred, tagalog_pred))
 #print(compute_score(y, y5, english_pred, plautdietsch_pred))
 #print('xhosa:')
 #print(compute_score(y, y6, english_pred, xhosa_pred))
+<<<<<<< HEAD
 =======
 
 # load the two text files with the scores
@@ -79,3 +80,5 @@ plt.show()
 
 # compute and print the score
 print(roc_auc_score(y_true, scores))
+=======
+>>>>>>> parent of 53bf86e... Part 2
