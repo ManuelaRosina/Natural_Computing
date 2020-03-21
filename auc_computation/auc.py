@@ -79,4 +79,3 @@ plt.show()
 
 # compute and print the score
 print(roc_auc_score(y_true, scores))
->>>>>>> parent of 1783d65... Merge branch 'master' of https://github.com/ManuelaRosina/Natural_Computing
