@@ -18,12 +18,12 @@ plautdietsch_pred = np.loadtxt(folder+'plautdietsch'+outfile)
 xhosa_pred = np.loadtxt(folder+'xhosa'+outfile)
 
 # assign the labels
-y = [1 for x in english_pred]
-y2 = [0 for x in tagalog_pred]
-y3 = [0 for x in hiligaynon_pred]
-y4 = [0 for x in middle_english_pred]
-y5 = [0 for x in plautdietsch_pred]
-y6 = [0 for x in xhosa_pred]
+y = [0 for x in english_pred]
+y2 = [1 for x in tagalog_pred]
+y3 = [1 for x in hiligaynon_pred]
+y4 = [1 for x in middle_english_pred]
+y5 = [1 for x in plautdietsch_pred]
+y6 = [1 for x in xhosa_pred]
 
 # compute and print the score
 print('tagalog:')
