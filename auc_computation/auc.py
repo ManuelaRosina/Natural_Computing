@@ -3,6 +3,7 @@ from sklearn.metrics import roc_auc_score
 from sklearn.metrics import roc_curve
 import matplotlib.pyplot as plt
 
+<<<<<<< HEAD
 def compute_score(y, y2, pred1, pred2):
     y_true, scores = merge_lists(y, y2, pred1, pred2)
 
@@ -54,3 +55,28 @@ print(compute_score(y, y2, english_pred, tagalog_pred))
 #print(compute_score(y, y5, english_pred, plautdietsch_pred))
 #print('xhosa:')
 #print(compute_score(y, y6, english_pred, xhosa_pred))
+=======
+
+# load the two text files with the scores
+english_pred = np.loadtxt('english.test.out')
+tagalog_pred = np.loadtxt('lang/xhosa.out')
+#tagalog_pred = np.loadtxt('tagalog.test.out')
+
+# assign the labels
+y = [1 for x in english_pred]
+y2 = [0 for x in tagalog_pred]
+
+# merge lists to one
+y_true = np.array(y + y2)
+scores = np.concatenate((english_pred,tagalog_pred))
+
+fpr, tpr, thresholds = roc_curve(y_true, scores)
+plt.plot(fpr, tpr)
+plt.title("ROC Curve")
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.show()
+
+# compute and print the score
+print(roc_auc_score(y_true, scores))
+>>>>>>> parent of 1783d65... Merge branch 'master' of https://github.com/ManuelaRosina/Natural_Computing
