@@ -38,14 +38,33 @@ def language():
     print('xhosa:')
     print(compute_score(y, y6, english_pred, xhosa_pred))
 
-def syscall_auc(nr, r):
-    path = '/home/manuela/Uni/jaar_1_Master/Natural_Computing/negative-selection/syscalls/snd-unm/'
-    label = np.loadtxt(path+'snd-unm.'+nr+'.labels')
-    pred = np.loadtxt('syscalls2_out'+r+'/snd-unm.'+nr+'.test.out.p')
+def syscall_auc(r):
+    path_unm = '/home/manuela/Uni/jaar_1_Master/Natural_Computing/negative-selection/syscalls/snd-unm/'
+    path_cert = '/home/manuela/Uni/jaar_1_Master/Natural_Computing/negative-selection/syscalls/snd-cert/'
+    label = np.loadtxt(path_cert+'snd-cert.1.labels')
+    pred = np.loadtxt('syscalls_out'+r+'/snd-cert.1.test.out.p')
+    for i in range(2,4):
+        label = np.concatenate((label, np.loadtxt(path_cert+'snd-cert.'+str(i)+'.labels')))
+        pred = np.concatenate((pred, np.loadtxt('syscalls_out'+r+'/snd-cert.'+str(i)+'.test.out.p')))
 
-    print(nr)
+    print('cert')
     print(roc_auc_score(label, pred))
     print()
 
-for i in range(1,4):
-    syscall_auc(str(i), '6')
+    label2 = np.loadtxt(path_unm+'snd-unm.1.labels')
+    pred2 = np.loadtxt('syscalls2_out'+r+'/snd-unm.1.test.out.p')
+    for i in range(2,4):
+        label2 = np.concatenate((label2, np.loadtxt(path_unm+'snd-unm.'+str(i)+'.labels')))
+        pred2 = np.concatenate((pred2, np.loadtxt('syscalls2_out'+r+'/snd-unm.'+str(i)+'.test.out.p')))
+
+    print('unm')
+    print(roc_auc_score(label2, pred2))
+    print()
+    print('both')
+    print(roc_auc_score(np.concatenate((label,label2)), np.concatenate((pred,pred2))))
+
+rs = ['3','4','6']
+for r in rs:
+    print('r = '+r)
+    syscall_auc(r)
+    print()
