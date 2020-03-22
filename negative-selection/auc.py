@@ -39,13 +39,13 @@ def language():
     print(compute_score(y, y6, english_pred, xhosa_pred))
 
 def syscall_auc(nr, r):
-    path = '/home/manuela/Uni/jaar_1_Master/Natural_Computing/negative-selection/syscalls/snd-cert/'
-    label = np.loadtxt(path+'snd-cert.'+nr+'.labels')
-    pred = np.loadtxt('syscalls_out'+r+'/snd-cert.'+nr+'.test.out.p')
+    path = '/home/manuela/Uni/jaar_1_Master/Natural_Computing/negative-selection/syscalls/snd-unm/'
+    label = np.loadtxt(path+'snd-unm.'+nr+'.labels')
+    pred = np.loadtxt('syscalls2_out'+r+'/snd-unm.'+nr+'.test.out.p')
 
     print(nr)
     print(roc_auc_score(label, pred))
     print()
 
-for i in range(1,3):
-    syscall_auc(str(i), '4')
+for i in range(1,4):
+    syscall_auc(str(i), '6')

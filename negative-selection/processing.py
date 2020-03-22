@@ -1,12 +1,13 @@
 import numpy as np
 
-path = '/home/manuela/Uni/jaar_1_Master/Natural_Computing/negative-selection/syscalls/snd-cert/'
+#path = '/home/manuela/Uni/jaar_1_Master/Natural_Computing/negative-selection/syscalls/snd-cert/'
+path = '/home/manuela/Uni/jaar_1_Master/Natural_Computing/negative-selection/syscalls/snd-unm/'
 
 def make_chunks(string, length):
     chunks = []
     for i in range(len(string)):
-        if i+length < len(string):
-            chunks.append(string[i:i+length])
+        if i*length+length < len(string):
+            chunks.append(string[i*length:i*length+length])
         else:
             return chunks
 
@@ -31,9 +32,9 @@ def preprocessing(filename):
         file.write(str(len(nr))+'\n')
     file.close()
 
-def postprocessing(nr, r):
-    chunk_length = np.loadtxt(path+'Preprocessed/'+'snd-cert.'+nr+'.test.chunklen')
-    pred = np.loadtxt('syscalls_out'+r+'/snd-cert.'+nr+'.test.out')
+def postprocessing(nr, r, folder):
+    chunk_length = np.loadtxt(path+'Preprocessed/'+'snd-'+folder+'.'+nr+'.test.chunklen')
+    pred = np.loadtxt('syscalls2_out'+r+'/snd-'+folder+'.'+nr+'.test.out')
     new_pred = []
     i = 0
     for chunk_l in chunk_length:
@@ -47,15 +48,16 @@ def postprocessing(nr, r):
         #print(i)
         #print()
     
-    file = open('syscalls_out'+r+'/snd-cert.'+nr+'.test.out.p','w+')
+    file = open('syscalls2_out'+r+'/snd-'+folder+'.'+nr+'.test.out.p','w+')
     for chunk in new_pred:
         file.write(str(chunk)+'\n')
     file.close()
     #print(len(pred))
 
+filenames = ['snd-unm.train', 'snd-unm.1.test', 'snd-unm.2.test', 'snd-unm.3.test']
 #filenames = ['snd-cert.train', 'snd-cert.1.test', 'snd-cert.2.test', 'snd-cert.3.test']
 #for filename in filenames:
 #    preprocessing(filename)
 
-for i in range(1,3):
-    postprocessing(str(i),str(4))
+for i in range(1,4):
+    postprocessing(str(i),str(6), 'unm')
