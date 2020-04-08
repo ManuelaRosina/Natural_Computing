@@ -1,0 +1,75 @@
+<!-- Page setup and title -->
+<!DOCTYPE html>
+<html lang="en">
+	<head><meta http-equiv="Content-Type" content="text/html;
+		charset=UTF-8">
+		<title>Assignment</title>
+		<style type="text/css">
+		body{
+			font-family: "HelveticaNeue-Light", sans-serif; padding : 15px;
+		}
+		</style>
+
+
+		p=3.14
+		see
+
+
+		<!-- Sourcing the cpm build -->
+		<script src="../../build/cpm.js"></script>
+		<script src="./fpsmeter.min.js"></script>
+		<script>
+		"use strict"
+		let config = {
+			ndim : 2,
+			field_size : [200,100],
+			conf : {
+				seed: 3,
+				T : 10, // CPM temperature
+				J: [[0,200], [200,0]],
+				// VolumeConstraint parameters
+				// VolumeConstraint importance per cellkind
+				// Target volume of each cellkind
+				LAMBDA_V : [0,2],
+				V : [0,420],
+				// PerimeterConstraint parameters
+				// PerimeterConstraint importance per cellkind
+				// Target perimeter of each cellkind
+				LAMBDA_P : [0,0],
+				P : [0,0],
+			},
+			simsettings : {
+				// Cells on the grid
+				NRCELLS : [3],
+				BURNIN : 500,
+				RUNTIME : 1000,
+				RUNTIME_BROWSER : "Inf",
+				CANVASCOLOR : "eaecef",
+				CELLCOLOR : ["000000"],
+				zoom : 4,
+				ACTCOLOR : [true],					// Should pixel activity values be displayed?
+				SHOWBORDERS : [true],				// Should cellborders be displayed?
+			}
+		}
+		let sim, meter
+		function initialize(){
+			sim = new CPM.Simulation( config, {} )
+			meter = new FPSMeter({left:"auto", right:"5px"})
+			step()
+		}
+		function step(){
+			sim.step()
+			meter.tick()
+			if( sim.conf["RUNTIME_BROWSER"] == "Inf" | sim.time+1 < sim.conf["RUNTIME_BROWSER"] ){
+				requestAnimationFrame( step )
+			}
+		}
+		</script>
+	</head>
+	<body onload="initialize()">
+		<h1>MaSterShi</h1>
+		<p>
+			Modeling an obstacle in the CPM, by setting high value for Adhesion.
+		</p>
+	</body>
+</html>

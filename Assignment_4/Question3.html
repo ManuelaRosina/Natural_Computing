@@ -1,0 +1,96 @@
+<!-- Page setup and title -->
+<!DOCTYPE html>
+<html lang="en">
+	<head><meta http-equiv="Content-Type" content="text/html;
+		charset=UTF-8">
+		<title>Assignment</title>
+		<style type="text/css">
+		body{
+			font-family: "HelveticaNeue-Light", sans-serif; padding : 15px;
+		}
+		</style>
+		<!-- Sourcing the cpm build -->
+		<script src="../../build/cpm.js"></script>
+		<script src="./fpsmeter.min.js"></script>
+		<script>
+		"use strict"
+		let config = {
+			ndim : 2,
+			field_size : [200,150],
+			conf : {
+				torus: [true,true],
+				seed: 1,
+				T : 10, // CPM temperature
+				J : [ [NaN, 12, 6], [12, 6, 16], [6, 16, 6] ],
+				// VolumeConstraint parameters
+				// VolumeConstraint importance per cellkind
+				// Target volume of each cellkind
+				LAMBDA_V : [0,2,2],
+				V : [0,200,100],
+				// PerimeterConstraint parameters
+				// PerimeterConstraint importance per cellkind
+				// Target perimeter of each cellkind
+				LAMBDA_P : [0,2,2],
+				P : [0, 180, 45],
+				// ActivityConstraint parameters
+				// ActivityConstraint importance per cellkind
+				// Activity memory duration per cellkind
+				// Is neighborhood activity computed as a
+				// "geometric" or "arithmetic" mean?
+				LAMBDA_ACT : [0,200,0],
+				MAX_ACT : [0,80,20],
+				ACT_MEAN : "geometric"
+			},
+			simsettings : {
+				NRCELLS : [3,1],
+				BURNIN : 500,
+				RUNTIME : 1000,
+				RUNTIME_BROWSER : "Inf",
+				CANVASCOLOR : "eaecef",
+				CELLCOLOR : ["0000FF","000000"],
+				zoom : 4,
+																			ACTCOLOR : [true],					// Should pixel activity values be displayed?
+																SHOWBORDERS : [true],				// Should cellborders be displayed?
+			}
+		}
+		let sim, meter
+		function initialize(){
+				let custommethods = {
+		initializeGrid : initializeGrid
+		}
+			sim = new CPM.Simulation( config, custommethods )
+			meter = new FPSMeter({left:"auto", right:"5px"})
+			step()
+		}
+		function step(){
+			sim.step()
+			meter.tick()
+			if( sim.conf["RUNTIME_BROWSER"] == "Inf" | sim.time+1 < sim.conf["RUNTIME_BROWSER"] ){
+				requestAnimationFrame( step )
+			}
+		}
+		/* The following custom methods will be added to the simulation object*/
+		function initializeGrid(){
+		// add the initializer if not already there
+		if( !this.helpClasses["gm"] ){ this.addGridManipulator() }
+		let step =  Math.round((this.C.conf.P[2]/6.28)*3)
+		for( var i = 1 ; i < this.C.extents[0] ; i += step ){
+		for( var j = 1 ; j < this.C.extents[1] ; j += step ){
+			this.gm.seedCellAt( 2, [i,j] )
+		}
+		}
+		console.log(this.conf.NRCELLS[0])
+
+		for(var i=0; i<this.conf.NRCELLS[0];i++){
+			this.gm.seedCellAt( 1, [Math.floor(Math.random() * (this.C.extents[0]-1)) , Math.floor(Math.random() * (this.C.extents[1]-1)) ])
+		}
+		}
+		</script>
+	</head>
+	<body onload="initialize()">
+		<h1>MaSterShi</h1>
+		<p>
+			Modeling simulation. Using perimeter as restriction for obstacles allows us to use its radius for each obstacle's position.
+		</p>
+	</body>
+</html>
