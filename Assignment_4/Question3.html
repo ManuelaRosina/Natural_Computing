@@ -42,7 +42,7 @@
 				ACT_MEAN : "geometric"
 			},
 			simsettings : {
-				NRCELLS : [3,1],
+				NRCELLS : [8,1],
 				BURNIN : 500,
 				RUNTIME : 1000,
 				RUNTIME_BROWSER : "Inf",
@@ -73,7 +73,11 @@
 		function initializeGrid(){
 		// add the initializer if not already there
 		if( !this.helpClasses["gm"] ){ this.addGridManipulator() }
-		let step =  Math.round((this.C.conf.P[2]/6.28)*3)
+		let obstacle_radius = Math.round(this.C.conf.P[2]/6.28)
+		///////////////////////////////////
+		//	Magic Line
+		let step =  obstacle_radius * 2
+		///////////////////////////////////
 		for( var i = 1 ; i < this.C.extents[0] ; i += step ){
 		for( var j = 1 ; j < this.C.extents[1] ; j += step ){
 			this.gm.seedCellAt( 2, [i,j] )
