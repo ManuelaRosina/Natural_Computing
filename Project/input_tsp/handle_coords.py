@@ -8,7 +8,7 @@ filepath = os.path.dirname(os.path.realpath('__file__'))
 if os.path.split(filepath)[1]!='input_tsp':
     filepath = os.path.join(filepath, 'input_tsp')
 
-def readCoords(batch=-1):
+def readCoords(batch=-7):
     coords = []
     with open(os.path.join(filepath, filename), "r") as file:
         for line in file.readlines()[6:batch+6]:
