@@ -15,7 +15,7 @@ def outputCsv(df, filename: str):
 if __name__ == '__main__':
     coords = readCoords()
     graph = Graph(coords)
-    ant_count = 10
+    ant_count = 10000
     generations = 1000
     alpha_vals = np.round(np.linspace(0, 1, 11), 2)
     beta_vals = [1.5, 2, 2.5]
