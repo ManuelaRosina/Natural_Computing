@@ -11,7 +11,7 @@ if os.path.split(filepath)[1]!='input_tsp':
 def readCoords(batch=-1):
     coords = []
     with open(os.path.join(filepath, filename), "r") as file:
-        for line in file.readlines()[6:batch]:
+        for line in file.readlines()[6:batch+6]:
             node, x, y = line.split()
             coords.append({'node': node, 'x': x, 'y': y})
     return coords
