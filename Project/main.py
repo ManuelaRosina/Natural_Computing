@@ -58,7 +58,7 @@ if __name__ == '__main__':
                         start = time.time()
                         aco = AntColonySystem(ant_count, generations, alpha, beta, fi, ro, q_0)
                         try:
-                            best_cost, best_costs, avg_costs, best_solution = aco.solve(graph)
+                            best_cost, best_costs, avg_costs, best_solution = aco.solve(graph.resetPheromoneLevel())
                             new_row = {
                                     'alpha': alpha,
                                     'beta': beta,
@@ -86,7 +86,7 @@ if __name__ == '__main__':
                 start = time.time()
                 aco = MinMaxAntSystem(ant_count, generations, alpha, beta, ro)
                 try:
-                    best_cost, best_costs, avg_costs, best_solution = aco.solve(graph)
+                    best_cost, best_costs, avg_costs, best_solution = aco.solve(graph.resetPheromoneLevel())
                     new_row = {
                             'alpha': alpha,
                             'beta': beta,
