@@ -26,9 +26,6 @@ class Graph():
         
     def calcEuclideanDistance(self, a, b):
         return math.sqrt(sum([(a_ - b_) ** 2 for a_, b_ in zip(a, b)]))
-    
-    def resetPheromoneLevel(self):
-        self.pheromone = [[self.initial_pheromone for j in range(self.city_count)] for i in range(self.city_count)]
 
 class Ant():
     def __init__(self, aco, graph: Graph):

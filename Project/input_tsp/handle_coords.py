@@ -13,7 +13,7 @@ def readCoords(batch=-7, meta_offset=6):
     with open(os.path.join(filepath, filename), "r") as file:
         for line in file.readlines()[meta_offset:batch+meta_offset]:
             node, x, y = line.split()
-            coords.append({'node': node, 'x': x, 'y': y})
+            coords.append({'node': node, 'x': int(x), 'y': int(y)})
     return coords
 
 if __name__== '__main__':
