@@ -75,7 +75,7 @@ if __name__ == '__main__':
     ant_count = 10
     generations = 100
     alpha_vals = [0.2, 0.4, 0.6, 0.8, 1.0]
-    beta = [1.5. 2.0, 2.5]
+    beta = [1.5, 2.0, 2.5]
     pheromone_residual_coefficients = [0.2, 0.4, 0.6, 0.8]
     pheromone_residual_coefficients_local = [0.2, 0.4, 0.6, 0.8]
     q_0 = [0.2, 0.4, 0.6]
