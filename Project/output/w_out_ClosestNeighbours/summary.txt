@@ -1,0 +1,1 @@
+{'maximum': 19986, 'minimum': 13, 'total_points': 39}

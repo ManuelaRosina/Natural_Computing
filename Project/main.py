@@ -9,20 +9,20 @@ import operator
 from datetime import datetime
 
 def outputCsv(df, filename: str):
-    output_path = os.path.join(os.path.dirname(os.path.realpath('__file__')), 'output_f', 'output_'+datetime.now().strftime('%m_%d'))
+    output_path = os.path.join(os.path.dirname(os.path.realpath('__file__')), 'output', 'output_'+datetime.now().strftime('%m_%d'))
     if not os.path.exists(output_path):
         os.mkdir(output_path)
     df.to_csv(os.path.join(output_path, filename+'.csv'))   
    
 def outputTxt(text: str, filename: str):
-    output_path = os.path.join(os.path.dirname(os.path.realpath('__file__')), 'output_f', 'output_'+datetime.now().strftime('%m_%d'))
+    output_path = os.path.join(os.path.dirname(os.path.realpath('__file__')), 'output', 'output_'+datetime.now().strftime('%m_%d'))
     if not os.path.exists(output_path):
         os.mkdir(output_path)
     with open(os.path.join(output_path, filename+'.txt'),"w") as file:
         file.write(text)  
         
 def outputFig(filename: str):
-    output_path = os.path.join(os.path.dirname(os.path.realpath('__file__')), 'output_f', 'output_'+datetime.now().strftime('%m_%d'))
+    output_path = os.path.join(os.path.dirname(os.path.realpath('__file__')), 'output', 'output_'+datetime.now().strftime('%m_%d'))
     if not os.path.exists(output_path):
         os.mkdir(output_path)
     plt.savefig(os.path.join(output_path, filename+'.png')) 
@@ -78,7 +78,9 @@ if __name__ == '__main__':
     beta_vals = [1.5, 2.0, 2.5]
     pheromone_residual_coefficients = [0.2, 0.4, 0.6, 0.8]
     pheromone_residual_coefficients_local = [0.2, 0.4, 0.6, 0.8]
-    q_0 = [0.2, 0.4, 0.6]
+    q_0s = [0.2, 0.4, 0.6]
+    mins = [0.0, 0.1, 0.2]
+    maxs = [0.6, 0.8, 0.9, 1.0]
     print('Start -', str(datetime.now()))
     # Ant System
     as_results=pd.DataFrame(columns=['alpha','beta','pheromone_residual_coefficient','best_cost_found','update_count','lowest_cost_update_count','lowest_costs_found','best_solution_found','time_s'])
@@ -111,26 +113,27 @@ if __name__ == '__main__':
         for beta in beta_vals:
             for fi in pheromone_residual_coefficients_local:
                for ro in pheromone_residual_coefficients:
-                    start = time.time()
-                    graph = Graph(coords)
-                    aco = AntColonySystem(ant_count, generations, alpha, beta, fi, ro, q_0)
-                    best_cost, best_costs, avg_costs, best_solution = aco.solve(graph)
-                    new_row = {
-                            'alpha': alpha,
-                            'beta': beta,
-                            'fi': fi,
-                            'ro': ro,
-                            'q_0':q_0,
-                            'best_cost_found': best_cost,
-                            'avg_costs_found': avg_costs,
-                            'best_costs_found': best_costs,                        
-                            'update_count': len(best_costs),
-                            'lowest_cost_update_count': len(set(best_costs))-1,
-                            'lowest_costs_found': list(set(best_costs)),
-                            'best_solution_found': best_solution,
-                            'time_s': time.time()-start
-                            }
-                    acs_results = acs_results.append(new_row, ignore_index=True)
+                   for q_0 in q_0s:
+                        start = time.time()
+                        graph = Graph(coords)
+                        aco = AntColonySystem(ant_count, generations, alpha, beta, fi, ro, q_0)
+                        best_cost, best_costs, avg_costs, best_solution = aco.solve(graph)
+                        new_row = {
+                                'alpha': alpha,
+                                'beta': beta,
+                                'fi': fi,
+                                'ro': ro,
+                                'q_0':q_0,
+                                'best_cost_found': best_cost,
+                                'avg_costs_found': avg_costs,
+                                'best_costs_found': best_costs,                        
+                                'update_count': len(best_costs),
+                                'lowest_cost_update_count': len(set(best_costs))-1,
+                                'lowest_costs_found': list(set(best_costs)),
+                                'best_solution_found': best_solution,
+                                'time_s': time.time()-start
+                                }
+                        acs_results = acs_results.append(new_row, ignore_index=True)
     outputCsv(acs_results, 'acs_results')
     print('ACS end -', str(datetime.now()))
     # MinMax Ant System
@@ -138,24 +141,27 @@ if __name__ == '__main__':
     for alpha in alpha_vals:
         for beta in beta_vals:
             for ro in pheromone_residual_coefficients:
-                for q_0 in q_0s:
-                    start = time.time()
-                    graph = Graph(coords)
-                    aco = MinMaxAntSystem(ant_count, generations, alpha, beta, ro)
-                    best_cost, best_costs, avg_costs, best_solution = aco.solve(graph)
-                    new_row = {
-                            'alpha': alpha,
-                            'beta': beta,
-                            'pheromone_residual_coefficient': ro,
-                            'best_cost_found': best_cost,
-                            'avg_costs_found': avg_costs,
-                            'best_costs_found': best_costs,                        
-                            'update_count': len(best_costs),
-                            'lowest_cost_update_count': len(set(best_costs))-1,
-                            'lowest_costs_found': list(set(best_costs)),
-                            'best_solution_found': best_solution,
-                            'time_s': time.time()-start
-                            }
-                    mmas_results = mmas_results.append(new_row, ignore_index=True)
-    outputCsv(mmas_results, 'as_results')
+                for minim in mins:
+                    for maxim in maxs:
+                        start = time.time()
+                        graph = Graph(coords)
+                        aco = MinMaxAntSystem(ant_count, generations, alpha, beta, ro, minim, maxim)
+                        best_cost, best_costs, avg_costs, best_solution = aco.solve(graph)
+                        new_row = {
+                                'alpha': alpha,
+                                'beta': beta,
+                                'pheromone_residual_coefficient': ro,
+                                'min': minim,
+                                'max': maxim,
+                                'best_cost_found': best_cost,
+                                'avg_costs_found': avg_costs,
+                                'best_costs_found': best_costs,                        
+                                'update_count': len(best_costs),
+                                'lowest_cost_update_count': len(set(best_costs))-1,
+                                'lowest_costs_found': list(set(best_costs)),
+                                'best_solution_found': best_solution,
+                                'time_s': time.time()-start
+                                }
+                        mmas_results = mmas_results.append(new_row, ignore_index=True)
+    outputCsv(mmas_results, 'mmas_results')
     print('MMAS end -', str(datetime.now()))
