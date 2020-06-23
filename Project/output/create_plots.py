@@ -11,13 +11,6 @@ df1a = pd.read_csv('w_ClosestNeighbours/as_results.csv')
 df1b = pd.read_csv('w_ClosestNeighbours/acs_results.csv')
 df1c = pd.read_csv('w_ClosestNeighbours/mmas_results.csv')
 
-print(df1a.time_s.mean())
-print(df1b.time_s.mean())
-print(df1c.time_s.mean())
-print(df1a.time_s.sum()/60)
-print(df1b.time_s.sum()/60)
-print(df1c.time_s.sum()/60)
-
 best_as=df1a[df1a.best_cost_found==df1a.best_cost_found.min()]
 best_acs=df1b[df1b.best_cost_found==df1b.best_cost_found.min()]
 best_mmas=df1c[df1c.best_cost_found==df1c.best_cost_found.min()]
@@ -39,9 +32,15 @@ all_dfs = pd.concat(dfs)
 all_dfs.boxplot(by='label')
 plt.title('Best costs')
 plt.suptitle('')
-plt.savefig('best_costs.png')
+plt.savefig('plots/best_costs.png')
 
 # time
+print(df1a.time_s.mean())
+print(df1b.time_s.mean())
+print(df1c.time_s.mean())
+print(df1a.time_s.sum()/60)
+print(df1b.time_s.sum()/60)
+print(df1c.time_s.sum()/60)
 mean_time_w_cn = [df1a.time_s.mean(), df1b.time_s.mean(), df1c.time_s.mean()]
 mean_time_wout_cn = [df2a.time_s.mean(), df2b.time_s.mean(), df2c.time_s.mean()]
 index = ['AS', 'ACS', 'MMAS']
@@ -49,7 +48,7 @@ df = pd.DataFrame({'mean_time': mean_time_w_cn, 'mean_time_wout_cn': mean_time_w
 ax = df.plot.barh()
 ax.legend(['w/ Closest Neighbours', 'w/out Closest Neighbours'])
 plt.xlabel('average time in seconds')
-plt.savefig('time.png')
+plt.savefig('plots/time.png')
 
 # alpha
 x = df1b.alpha.unique()
@@ -62,7 +61,7 @@ plt.plot(x, y3)
 plt.legend(['Ant System', 'Ant Colony System', 'Min-Max Ant System'])
 plt.xlabel('alpha')
 plt.ylabel('Mean Average Best costs')
-plt.savefig('alpha.png')
+plt.savefig('plots/alpha.png')
 plt.show()
 
 # beta
@@ -76,7 +75,7 @@ plt.plot(x, y3)
 plt.legend(['Ant System', 'Ant Colony System', 'Min-Max Ant System'])
 plt.xlabel('beta')
 plt.ylabel('Mean Average Best costs')
-plt.savefig('beta.png')
+plt.savefig('plots/beta.png')
 plt.show()
 
 # rho
@@ -90,7 +89,7 @@ plt.plot(x, y3)
 plt.legend(['Ant System', 'Ant Colony System', 'Min-Max Ant System'])
 plt.xlabel('Pheromone residual coefficient')
 plt.ylabel('Mean Average Best costs')
-plt.savefig('rho.png')
+plt.savefig('plots/rho.png')
 plt.show()
 
 # q0
@@ -99,7 +98,7 @@ y2 = df1b.groupby('q_0')['ams'].mean()
 plt.plot(x, y2)
 plt.xlabel('Select closest city with probability p')
 plt.ylabel('Mean Average Best costs')
-plt.savefig('q_0.png')
+plt.savefig('plots/q_0.png')
 plt.show()
 
 # fi
@@ -108,7 +107,7 @@ y2 = df1b.groupby('fi')['ams'].mean()
 plt.plot(x, y2)
 plt.xlabel('Local pheromone residual coefficient')
 plt.ylabel('Mean Average Best costs')
-plt.savefig('fi.png')
+plt.savefig('plots/fi.png')
 plt.show()
 
 # min
@@ -121,7 +120,7 @@ y2 = df1c.groupby('min')['ams'].mean()
 plt.plot(x, y2)
 plt.xlabel('Minimum pheromone limitation on trails')
 plt.ylabel('Mean Average Best costs')
-plt.savefig('min.png')
+plt.savefig('plots/min.png')
 plt.show()
 
 # max
@@ -130,5 +129,5 @@ y2 = df1c.groupby('max')['ams'].mean()
 plt.plot(x, y2)
 plt.xlabel('Maximum pheromone limitation on trails')
 plt.ylabel('Mean Average Best costs')
-plt.savefig('max.png')
+plt.savefig('plots/max.png')
 plt.show()
